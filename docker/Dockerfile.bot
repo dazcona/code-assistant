@@ -1,0 +1,17 @@
+FROM python:3.6
+
+RUN apt update -y; apt install -y \
+git 
+
+RUN pip install \
+python-dateutil>=2.6.0 \
+selenium>=3.4.3 \
+six>=1.10.0 \
+python-axolotl \
+cryptography \
+typing \
+numpy \
+python-magic \
+"git+https://github.com/enric1994/WebWhatsapp-Wrapper.git" \
+aiohttp \
+pymongo

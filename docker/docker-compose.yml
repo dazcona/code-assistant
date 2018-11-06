@@ -1,0 +1,62 @@
+version: "3"
+
+services:
+  firefox:
+    image: selenium/standalone-firefox-debug:3.13.0
+    container_name: firefox
+    ports:
+      - "4444:4444"
+      - "5900:5900"
+    volumes:
+      - "/dev/shm:/dev/shm"
+    networks:
+      - selenium
+  mongo:
+    image: mongo
+    container_name: mongo
+    volumes:
+      - ../data/db:/data/db
+    command: mongod
+    networks:
+       - selenium
+    env_file:
+      - ../config/.env
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: web
+    working_dir: /web
+    ports:
+      - "5000:5000"
+    volumes:
+       - "../:/web"
+    command: "python /web/src/app.py"
+    networks:
+       - selenium
+    depends_on:
+       - mongo
+    env_file:
+      - ../config/.env
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile.bot
+    container_name: bot
+    working_dir: /coderbot
+    environment:
+       - SELENIUM=http://firefox:4444/wd/hub
+    volumes:
+       - "../:/coderbot"
+    command: "python /coderbot/src/talk.py"
+    networks:
+       - selenium
+    depends_on:
+       - firefox
+       - mongo
+       - web
+    env_file:
+      - ../config/.env
+
+networks:
+  selenium:

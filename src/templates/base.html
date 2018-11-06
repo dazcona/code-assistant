@@ -1,0 +1,28 @@
+{% extends "bootstrap/base.html" %}
+
+{% block head %}
+    {{super()}}
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+{% endblock %}
+
+{% block title %}
+    CoderBot
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        
+        {% block page_content %}
+        {% endblock %}
+
+        {% for message in get_flashed_messages() %}
+        <br>
+        <div class="alert {{ message.alert_type }} alert-dismissible" role="alert">
+            {{ message.text }}
+        </div>
+        {% endfor %}
+
+    </div>
+
+{% endblock %}

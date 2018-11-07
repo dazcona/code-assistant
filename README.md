@@ -23,4 +23,8 @@ Code Assistant is a Whatsapp Artificial Intelligence ChatBot to support learning
 * Github & gists
 * Google's Phone Validator
 
+---
 
+### Screenshots:
+
+![alt-text-1](img/coderbot1.jpeg "Validation") ![alt-text-2](img/coderbot2.jpeg "Progress") ![alt-text-3](img/coderbot3.jpeg "Code Snippets")

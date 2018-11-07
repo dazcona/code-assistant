@@ -22,3 +22,5 @@ prune:
 	docker network prune -f; docker volume prune -f
 kill:
 	make down; make reset; make prune; make run
+devel-bot:
+	docker-compose -f docker/docker-compose.yml run bot bash

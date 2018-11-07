@@ -10,13 +10,9 @@ geckodriver.log
 
 # Config
 config/
-src/config.py
 
 # Users
 data/
-
-# Environment
-env/
 
 # MAC
 .DS_Store

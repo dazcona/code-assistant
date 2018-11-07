@@ -38,7 +38,7 @@ subject_encoded_emojis = '=?utf-8?Q?=F0=9F=A4=96_=F0=9F=91=BE_%s?=' % (subject)
 
 # STUDENTS
 students = db.students.find(
-	{ 'status': { '$in': [ 0, 1 ] } },
+	{ 'status': { '$in': [ 0 ] } },
 	{ 'email': 1, 'token': 1 },
 )
 

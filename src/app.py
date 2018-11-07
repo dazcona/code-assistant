@@ -73,7 +73,7 @@ def success():
 	code = request.args['code']
 	flash(dict(
 		alert_type = 'alert-info',
-		text = 'CoderBot will talk to you now on WhatsApp, insert the following code to verify it is you: %s' % (code),
+		text = 'CoderBot will talk to you now on WhatsApp, insert the following code to verify it is you: <strong>%s</strong>' % (code),
 		)
 	)
 	return render_template('base.html')

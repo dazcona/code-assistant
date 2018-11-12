@@ -171,7 +171,7 @@ def get_options(db, student, text):
 
 def opt_out(db, _student, _text):
 
-    text = get_text(text)
+    text = get_text(_text)
     if text == 'yes':
         return [ CONFIRM_OPT_OUT ], 7
     else:

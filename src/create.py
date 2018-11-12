@@ -47,7 +47,7 @@ def store_students(filename):
 			{ 'username': student['username'] },
 			{ 'username': 1 },
 		)
-		if len(candidate) > 0:
+		if candidate.count() > 0:
 			print('Student %s is already in the database' % (student['username']))
 		else:
 			print('Inserting %s in the database' % (student['username']))
@@ -76,9 +76,9 @@ def store_predictions(filename):
 
 	if query_yes_no("Drop the predictions collection?", "no"):
 		db.predictions.drop()
-
+		
 	with open(filename) as f:
-    	predictions = json.load(f)
+		predictions = json.load(f)
 
 	print("Inserting predictions in bulk")
 	result = db.predictions.insert_many(predictions)
@@ -91,9 +91,9 @@ def store_recommendations(filename):
 
 	if query_yes_no("Drop the recommendations collection?", "no"):
 		db.recommendations.drop()
-
+		
 	with open(filename) as f:
-    	recommendations = json.load(f)
+		recommendations = json.load(f)
 
 	print("Inserting recommendations in bulk")
 	result = db.recommendations.insert_many(recommendations)
@@ -106,9 +106,9 @@ def store_features(filename):
 
 	if query_yes_no("Drop the features collection?", "no"):
 		db.features.drop()
-
+	
 	with open(filename) as f:
-    	features = json.load(f)
+		features = json.load(f)
 
 	print("Inserting features in bulk")
 	result = db.features.insert_many(features)
@@ -121,22 +121,21 @@ def main(args):
 
 	filename = args[0]
 
-	if filename.startswith('emails'):
+	if 'emails' in filename:
 
 		store_students(filename)
 
-	elif filename.startswith('predictions'):
+	elif 'predictions' in filename:
 
 		store_predictions(filename)
 
-	elif filename.startswith('recommendations'):
+	elif 'recommendations' in filename:
 
 		store_recommendations(filename)
 
-	elif filename.startswith('features'):
+	elif 'features' in filename:
 
 		store_features(filename)
-
 
 	else:
 

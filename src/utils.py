@@ -106,7 +106,7 @@ def store_message(db, sender, recipient, text):
 def get_prediction(db, username):
     """ Get prediction """
 
-    return db.predictions.find(
+    return db.predictions.find_one(
         { 'student': username, 'week': 7 }, 
         { 'prediction': 1 },
     )
@@ -115,7 +115,7 @@ def get_prediction(db, username):
 def get_recommendation(db, username):
     """ Get prediction """
 
-    return db.recommendations.find(
+    return db.recommendations.find_one(
         { 'student': username, 'week': 7 }, 
         { 'task': 1, 'labsheet': 1, 'resources': 1 },
     )
@@ -124,7 +124,7 @@ def get_recommendation(db, username):
 def get_work(db, username):
     """ Get prediction """
 
-    return db.features.find(
+    return db.features.find_one(
         { 'student': username, 'week': 7 }, 
         { 'cum_programs_W7': 1 },
     )

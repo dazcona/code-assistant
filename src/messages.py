@@ -2,6 +2,7 @@
 
 # IMPORTS
 import string
+from utils import get_prediction, get_recommendation, get_work
 
 
 GREETING = '''Hi %s %s! I am CoderBot 🤖 Thanks for taking a step towards becoming a better coder. ''' + \
@@ -117,13 +118,13 @@ def get_grade_message(prediction, work):
         return GRADE_BEFORE % GRADE_70
     elif prediction and work > 0.5:
         return GRADE_BEFORE % GRADE_60
-    elif not prediction and work > 0.8:
+    elif prediction or work > 0.4:
         return GRADE_BEFORE % GRADE_50
-    elif not prediction and work > 0.8:
+    elif prediction or work > 0.3:
         return GRADE_BEFORE % GRADE_40
-    elif not prediction and work > 0.8:
+    elif prediction or work > 0.2:
         return GRADE_BEFORE % GRADE_30
-    elif not prediction and work > 0.8:
+    elif prediction or work > 0.1:
         return GRADE_BEFORE % GRADE_20
     else:
         return GRADE_BEFORE % GRADE_10
@@ -140,9 +141,10 @@ def get_options(db, student, text):
         # Performance prediction
         prediction = get_prediction(db, student['username'])
         # Work
-        work = get_work(student['username'])
+        work = get_work(db, student['username'])
+        return [ str(prediction['prediction']), str(work['cum_programs_W7']), str(type(prediction['prediction'])) ], 5
         # Message
-        grade = get_grade_message(prediction['prediction'], work['cum_programs_W7'])
+        grade = 'Hello' # get_grade_message(prediction['prediction'], work['cum_programs_W7'])
         response = [ grade, LAB ]
         if True: # add logic for the lab
             reponse.append( LAB_YES )

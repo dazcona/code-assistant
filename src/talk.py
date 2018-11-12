@@ -47,7 +47,7 @@ async def run():
         phone = student['phone']
         # Get Response
         print('Getting response...')
-        response = status_to_message[status](student, incoming_text)
+        response = status_to_message[status](db, student, incoming_text)
         if response:
             # Valid Response
             response_texts, status_updated = response
@@ -101,7 +101,7 @@ async def run():
                             # Store message from user
                             store_message(db, username, 'coderbot', message_text)
                             # Text
-                            await text(db, student, message_text)
+                            await text(student, message_text)
                 else:
                     print('Number not known')
 

@@ -11,7 +11,7 @@ web:
 mongo:
 	docker exec -it mongo mongo admin -u root -p
 create:
-	docker exec -it web python src/create.py data/emails.csv
+	docker exec -it web python src/create.py data/emails/emails.test.csv
 send:
 	docker exec -it web python src/send.py
 down:

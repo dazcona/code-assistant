@@ -126,5 +126,5 @@ def get_work(db, username):
 
     return db.features.find_one(
         { 'student': username, 'week': 7 }, 
-        { 'cum_programs_W7': 1 },
+        { 'cum_programs_W7': 1, 'coverage_W7': 1 },
     )

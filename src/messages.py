@@ -3,6 +3,7 @@
 # IMPORTS
 import string
 from utils import get_prediction, get_recommendation, get_work
+from gist_scrapper import gist
 
 
 GREETING = '''Hi %s %s! I am CoderBot 🤖 Thanks for taking a step towards becoming a better coder. ''' + \
@@ -28,7 +29,7 @@ MORE_OPTIONS = \
 '''Type *help* for further help.\n''' + \
 '''Type *opt-out* to opt-out from this project.'''
 
-GRADE_BEFORE = '''For the last week our records show that you are %s'''
+GRADE_BEFORE = '''For the last week our records show that %s'''
 GRADE_100 = '''you are engaging really well with the courseware and are well on top of the module 😎 🤓. Well done you 👊. Please keep up the good work this week for the module 👏'''
 GRADE_90 = '''you are engaging well with the courseware and seem to be managing the module well 😉. Well done you 👊. Please keep up the good work this week for the module 🙌'''
 GRADE_80 = '''you are engaging OK with the courseware and seem to be managing the module well 😉. Well done you 👊. Please keep up the good work this week for the module 💪'''
@@ -40,13 +41,14 @@ GRADE_30 = '''you are not engaging enough with the courseware for the module. Pl
 GRADE_20 = '''you are not engaging enough with the courseware for the module and you might need to work harder. Please try to make more effort to keep up this week and if you are finding this difficult then do contact the lecturer 👨‍🏫 👩‍🏫'''
 GRADE_10 = '''you are not engaging enough with the courseware for the module and you really need to work harder. Please try to make more effort to keep up this week and if you are finding this difficult then do contact the lecturer 👨‍🏫 👩‍🏫'''
 
-LAB = '''Lab attendance is generally correlated with the student's performance. '''
-LAB_YES = '''Well done to you for attending last week's lab session 👩‍🔬 👨‍🔬'''
+LAB = '''Lab attendance is generally correlated with the student's performance 👩‍🔬 👨‍🔬'''
+COVERAGE_YES = '''Well done to you for looknig at the notes last week! 😎'''
 
-MATERIAL = '''In order to engage more with the material and make more progress on the laboratory work, ''' + \
-'''please have a closer look at the labsheet: %s and the following material: %s 👩‍💻 👨‍💻'''
+MATERIAL_LAB = '''In order to engage more with the material and make more progress on the laboratory work, ''' + \
+'''please have a closer look at the labsheet: %s'''
+MATERIAL_RES = '''Check out the following related material: %s 👩‍💻 👨‍💻'''
 
-PROGRAM = '''Check out this code snippet about %s: %s'''
+PROGRAM = '''Check out this code snippet regarding ```%s``` 🚀'''
 
 TERMS = '''Our predictions and recommended programs are based on your engagement and effort with the course ''' + \
 '''(the programs you develop and the course material you access); your characteristics and prior performance. ''' + \
@@ -75,6 +77,8 @@ DATA_REMOVED = '''Thank you for your confirmation! Your data will be remove. Bye
 DATA_NOT_REMOVED = '''Thank you for your confirmation! Your data will only be used for research purposed anonymously. Bye now 🤖 👋 '''
 
 BYE = '''It was great talking to you. See ya soon 🤖 👋'''
+
+LABSHEET_URI = 'https://ca116.computing.dcu.ie%s.html'
 
 
 def get_text(text):
@@ -142,25 +146,26 @@ def get_options(db, student, text):
         prediction = get_prediction(db, student['username'])
         # Work
         work = get_work(db, student['username'])
-        return [ str(prediction['prediction']), str(work['cum_programs_W7']), str(type(prediction['prediction'])) ], 5
         # Message
-        grade = 'Hello' # get_grade_message(prediction['prediction'], work['cum_programs_W7'])
+        grade = get_grade_message(prediction['prediction'], work['cum_programs_W7'])
         response = [ grade, LAB ]
-        if True: # add logic for the lab
-            reponse.append( LAB_YES )
+        # Coverage
+        if work['coverage_W7']:
+            response.append( COVERAGE_YES )
         return response, 5
     elif text == 'material':
         # Recommendation
         recommendation = get_recommendation(db, student['username'])
         # Message
-        material = MATERIAL % (recommendation['labsheet'], ', '.join(recommendation['resources']))
-        return [ material ], 5
+        lab = LABSHEET_URI % (recommendation['labsheet']) 
+        labsheet = MATERIAL_LAB % lab
+        resources = MATERIAL_RES % ', '.join(LABSHEET_URI % (resource) for resource in recommendation['resources'])
+        return [ labsheet, resources ], 5
     elif text == 'program':
-        # add logic for random snippets
-        topic = 'Selection Sort'
-        uri = 'https://gist.github.com/dazcona/07c6f32675d69ed2e81b94037b789347'
-        program = PROGRAM % (topic, uri)
-        return [ program ], 5
+        # Random gist
+        snippet, desc =  gist()
+        program = PROGRAM % (desc)
+        return [ program, snippet ], 5
     elif text == 'terms':
         return [ TERMS ], 5
     elif text == 'help':
@@ -173,7 +178,7 @@ def get_options(db, student, text):
 
 def opt_out(db, _student, _text):
 
-    text = get_text(text)
+    text = get_text(_text)
     if text == 'yes':
         return [ CONFIRM_OPT_OUT ], 7
     else:

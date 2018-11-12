@@ -14,4 +14,5 @@ def gist():
     data = resp.json()
     total_gists = len(data)
     r_index = random.randint(0,total_gists)
-    return data[r_index]['html_url']
+    item = data[r_index]
+    return item['html_url'], item['description']

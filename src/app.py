@@ -73,7 +73,8 @@ def success():
 	code = request.args['code']
 	flash(dict(
 		alert_type = 'alert-info',
-		text = 'CoderBot will talk to you now on WhatsApp, insert the following code to verify it is you: <strong>%s</strong>' % (code),
+		text = 'CoderBot will talk to you now on WhatsApp, insert the following code to verify it is you: ',
+		text_bold = code,
 		)
 	)
 	return render_template('base.html')
@@ -83,7 +84,8 @@ def success():
 def fail():
 	flash(dict(
 		alert_type = 'alert-danger',
-		text = 'There was an issue with your request, please email our admin at predictcs@computing.dcu.ie',
+		text = 'There was an issue with your request, please email our admin at ',
+		text_bold = 'predictcs@computing.dcu.ie',
 		)
 	)
 	return render_template('base.html')

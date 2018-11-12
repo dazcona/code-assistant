@@ -101,3 +101,30 @@ def store_message(db, sender, recipient, text):
     })
     # print(result)
     return result.inserted_id
+
+
+def get_prediction(db, username):
+    """ Get prediction """
+
+    return db.predictions.find(
+        { 'student': username, 'week': 7 }, 
+        { 'prediction': 1 },
+    )
+
+
+def get_recommendation(db, username):
+    """ Get prediction """
+
+    return db.recommendations.find(
+        { 'student': username, 'week': 7 }, 
+        { 'task': 1, 'labsheet': 1, 'resources': 1 },
+    )
+
+
+def get_work(db, username):
+    """ Get prediction """
+
+    return db.features.find(
+        { 'student': username, 'week': 7 }, 
+        { 'cum_programs_W7': 1 },
+    )

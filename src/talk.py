@@ -101,7 +101,7 @@ async def run():
                             # Store message from user
                             store_message(db, username, 'coderbot', message_text)
                             # Text
-                            await text(student, message_text)
+                            await text(db, student, message_text)
                 else:
                     print('Number not known')
 

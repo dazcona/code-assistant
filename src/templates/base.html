@@ -19,7 +19,7 @@
         {% for message in get_flashed_messages() %}
         <br>
         <div class="alert {{ message.alert_type }} alert-dismissible" role="alert">
-            {{ message.text }}
+            {{ message.text }} <strong>{{ message.text_bold }}</strong>
         </div>
         {% endfor %}
 

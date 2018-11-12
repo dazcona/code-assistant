@@ -14,4 +14,5 @@ numpy \
 python-magic \
 "git+https://github.com/enric1994/WebWhatsapp-Wrapper.git" \
 aiohttp \
-pymongo
+pymongo \
+requests

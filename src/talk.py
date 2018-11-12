@@ -21,7 +21,6 @@ if prod:
         os.environ["SELENIUM"]
     except KeyError:
         print("Please set the environment variable SELENIUM to Selenium URL")
-    sys.exit(1)
 
     # MongoDB
     db = get_db()
@@ -105,7 +104,7 @@ if prod:
                                 # Store message from user
                                 store_message(db, username, 'coderbot', message_text)
                                 # Text
-                                await text(db, student, message_text)
+                                await text(student, message_text)
                     else:
                         print('Number not known')
 

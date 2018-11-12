@@ -140,7 +140,7 @@ def get_options(db, student, text):
     if text == 'menu':
         return [ OPTIONS ], 5
     elif text == 'more':
-        return [ MORE_OPTIONS ]
+        return [ MORE_OPTIONS ], 5
     elif text == 'progress':
         # Performance prediction
         prediction = get_prediction(db, student['username'])
@@ -187,7 +187,7 @@ def opt_out(db, _student, _text):
 
 def delete_personal_data(db, _student, _text):
 
-    text = get_text(text)
+    text = get_text(_text)
     if text == 'yes':
         return [ DATA_REMOVED ], 9
     else:

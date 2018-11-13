@@ -42,38 +42,32 @@ if prod:
         async def text(student, incoming_text=''):
             """ Text a student """
 
-            try:
-
-                # Data
-                print('Student: {}'.format(student))
-                print('Gathering data...')
-                username = student['username']
-                status = student['status']
-                phone = student['phone']
-                # Get Response
-                print('Getting response...')
-                response = status_to_message[status](db, student, incoming_text)
-                if response:
-                    # Valid Response
-                    response_texts, status_updated = response
-                    # Reply
-                    print('Replying...')
-                    for response_text in response_texts:
-                        # Reply message
-                        chat = await driver.get_chat_from_id(phone)
-                        chat.send_message(response_text)
-                        # Store message
-                        print('Storing message...')
-                        store_message(db, 'coderbot', username, response_text)
-                    # Update Status
-                    print('Updaing status...')
-                    update_status(db, username, status_updated)
-                else:
-                    print('Invalid Response')
-
-            except:
-
-                print('Exception occurred in TEXT')
+            # Data
+            print('Student: {}'.format(student))
+            print('Gathering data...')
+            username = student['username']
+            status = student['status']
+            phone = student['phone']
+            # Get Response
+            print('Getting response...')
+            response = status_to_message[status](db, student, incoming_text)
+            if response:
+                # Valid Response
+                response_texts, status_updated = response
+                # Reply
+                print('Replying...')
+                for response_text in response_texts:
+                    # Reply message
+                    chat = await driver.get_chat_from_id(phone)
+                    chat.send_message(response_text)
+                    # Store message
+                    print('Storing message...')
+                    store_message(db, 'coderbot', username, response_text)
+                # Update Status
+                print('Updaing status...')
+                update_status(db, username, status_updated)
+            else:
+                print('Invalid Response')
 
         try:
 
@@ -110,7 +104,7 @@ if prod:
                                     message_text = message.safe_content[:-3].strip()
                                     print('Received: {}'.format(message_text))
                                     # Store message from user
-                                    store_message(username, 'coderbot', message_text)
+                                    store_message(db, username, 'coderbot', message_text)
                                     # Text
                                     await text(student, message_text)
                         else:
@@ -118,11 +112,11 @@ if prod:
 
                 # Wait for a bit
                 print('wait!')
-                await sleep(0.5, loop=loop)
+                await sleep(2, loop=loop)
 
         except:
 
-            print('Exception occurred in RUN')
+            print('Exception has occurred on RUN')
 
 
     async def start():

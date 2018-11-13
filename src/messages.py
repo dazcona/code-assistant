@@ -50,6 +50,9 @@ MATERIAL_RES = '''Check out the following related material: %s 👩‍💻 👨�
 
 PROGRAM = '''Check out this code snippet regarding ```%s``` 🚀'''
 
+REMINDER = '''This information was generated on %s and your progression might have changed since.'''
+_DATE = '''Monday the 12th November 2018'''
+
 TERMS = '''Our predictions and recommended programs are based on your engagement and effort with the course ''' + \
 '''(the programs you develop and the course material you access); your characteristics and prior performance. ''' + \
 '''Remember, this is just our best guess as to how you have been doing and is not an indicator of how you will do ''' + \
@@ -69,14 +72,13 @@ OPT_OUT = '''I am sad to see you go 🙁 I hope you were motivated to continue t
 CONFIRM_OPT_OUT = '''Thank you for your confirmation! You just opted-out. Do you want to remove all your data from our system? ''' + \
 '''Remember your phone number will removed at the end of the semester anyway. Your data is only used for research purposes anonymously. ''' + \
 '''Type *yes* to confirm or another word not to'''
-
 NOT_CONFIRM_OPT_OUT = '''I am so happy you are staying 👊 Type *menu* to see the options! 😎'''
 
-DATA_REMOVED = '''Thank you for your confirmation! Your data will be remove. Bye now 🤖 👋 '''
+DATA_REMOVED = '''Thank you for your confirmation! Your data will be remove. '''
+DATA_NOT_REMOVED = '''Thank you for your confirmation! Your data will only be used for research purposed anonymously. '''
+BYE = '''Any question please reach out to us at predictcs@computing.dcu.ie. Bye now 🤖 👋 '''
 
-DATA_NOT_REMOVED = '''Thank you for your confirmation! Your data will only be used for research purposed anonymously. Bye now 🤖 👋 '''
-
-BYE = '''It was great talking to you. See ya soon 🤖 👋'''
+NOT_ACTIVE = '''Your account is no longer active. '''
 
 LABSHEET_URI = 'https://ca116.computing.dcu.ie%s.html'
 
@@ -148,7 +150,7 @@ def get_options(db, student, text):
         work = get_work(db, student['username'])
         # Message
         grade = get_grade_message(prediction['prediction'], work['cum_programs_W7'])
-        response = [ grade, LAB ]
+        response = [ grade, REMINDER % _DATE, LAB ]
         # Coverage
         if work['coverage_W7']:
             response.append( COVERAGE_YES )
@@ -189,9 +191,14 @@ def delete_personal_data(db, _student, _text):
 
     text = get_text(_text)
     if text == 'yes':
-        return [ DATA_REMOVED ], 9
+        return [ DATA_REMOVED, BYE ], 9
     else:
-        return [ DATA_NOT_REMOVED ], 8
+        return [ DATA_NOT_REMOVED, BYE ], 8
+
+
+def no_chat(db, _student, _text):
+
+    return [ NOT_ACTIVE, BYE ], 10
 
 
 # DICTIONARY OF OPTIONS
@@ -201,5 +208,8 @@ status_to_message = {
     4: repeat_validation,
     5: get_options,
     6: opt_out,
-    7: delete_personal_data
+    7: delete_personal_data,
+    8: no_chat,
+    9: no_chat,
+    10: no_chat,
 }

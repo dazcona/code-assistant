@@ -42,75 +42,87 @@ if prod:
         async def text(student, incoming_text=''):
             """ Text a student """
 
-            # Data
-            print('Student: {}'.format(student))
-            print('Gathering data...')
-            username = student['username']
-            status = student['status']
-            phone = student['phone']
-            # Get Response
-            print('Getting response...')
-            response = status_to_message[status](db, student, incoming_text)
-            if response:
-                # Valid Response
-                response_texts, status_updated = response
-                # Reply
-                print('Replying...')
-                for response_text in response_texts:
-                    # Reply message
-                    chat = await driver.get_chat_from_id(phone)
-                    chat.send_message(response_text)
-                    # Store message
-                    print('Storing message...')
-                    store_message(db, 'coderbot', username, response_text)
-                # Update Status
-                print('Updaing status...')
-                update_status(db, username, status_updated)
-            else:
-                print('Invalid Response')
+            try:
 
-        # Starting
-        await sleep(10, loop=loop)
-        print('Connecting...')
-        await driver.connect()
-        print('Wait for login...')
-        await driver.wait_for_login()
-            
-        # Do something!
-        while not Task.current_task().cancelled():
+                # Data
+                print('Student: {}'.format(student))
+                print('Gathering data...')
+                username = student['username']
+                status = student['status']
+                phone = student['phone']
+                # Get Response
+                print('Getting response...')
+                response = status_to_message[status](db, student, incoming_text)
+                if response:
+                    # Valid Response
+                    response_texts, status_updated = response
+                    # Reply
+                    print('Replying...')
+                    for response_text in response_texts:
+                        # Reply message
+                        chat = await driver.get_chat_from_id(phone)
+                        chat.send_message(response_text)
+                        # Store message
+                        print('Storing message...')
+                        store_message(db, 'coderbot', username, response_text)
+                    # Update Status
+                    print('Updaing status...')
+                    update_status(db, username, status_updated)
+                else:
+                    print('Invalid Response')
 
-            # Validation for signups
-            print('Validate signups!')
-            for student in get_signups(db):
-                await text(student)
+            except:
 
-            # Check unread messages
-            print('Check unread!')
-            for contact in await driver.get_unread():
-                print('Get phone')
-                phone = contact.chat.id
-                if '@g.' not in phone: # only individual chats
-                    print('Get student')
-                    student = get_student_by_phone(db, phone)
-                    if student: # student known
-                        username = student['username']
-                        print('Check messages:')
-                        for message in reversed(contact.messages):
-                            print('Message: {}'.format(message))
-                            if isinstance(message, Message):
-                                # Message from user
-                                message_text = message.safe_content[:-3].strip()
-                                print('Received: {}'.format(message_text))
-                                # Store message from user
-                                store_message(username, 'coderbot', message_text)
-                                # Text
-                                await text(student, message_text)
-                    else:
-                        print('Number %s NOT known' % (phone))
+                print('Exception occurred in TEXT')
 
-            # Wait for a bit
-            print('wait!')
-            await sleep(0.5, loop=loop)
+        try:
+
+            # Starting
+            await sleep(10, loop=loop)
+            print('Connecting...')
+            await driver.connect()
+            print('Wait for login...')
+            await driver.wait_for_login()
+                
+            # Do something!
+            while not Task.current_task().cancelled():
+
+                # Validation for signups
+                print('Validate signups!')
+                for student in get_signups(db):
+                    await text(student)
+
+                # Check unread messages
+                print('Check unread!')
+                for contact in await driver.get_unread():
+                    print('Get phone')
+                    phone = contact.chat.id
+                    if '@g.' not in phone: # only individual chats
+                        print('Get student')
+                        student = get_student_by_phone(db, phone)
+                        if student: # student known
+                            username = student['username']
+                            print('Check messages:')
+                            for message in reversed(contact.messages):
+                                print('Message: {}'.format(message))
+                                if isinstance(message, Message):
+                                    # Message from user
+                                    message_text = message.safe_content[:-3].strip()
+                                    print('Received: {}'.format(message_text))
+                                    # Store message from user
+                                    store_message(username, 'coderbot', message_text)
+                                    # Text
+                                    await text(student, message_text)
+                        else:
+                            print('Number %s NOT known' % (phone))
+
+                # Wait for a bit
+                print('wait!')
+                await sleep(0.5, loop=loop)
+
+        except:
+
+            print('Exception occurred in RUN')
 
 
     async def start():

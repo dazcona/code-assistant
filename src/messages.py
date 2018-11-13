@@ -42,7 +42,7 @@ GRADE_20 = '''you are not engaging enough with the courseware for the module and
 GRADE_10 = '''you are not engaging enough with the courseware for the module and you really need to work harder. Please try to make more effort to keep up this week and if you are finding this difficult then do contact the lecturer 👨‍🏫 👩‍🏫'''
 
 LAB = '''Lab attendance is generally correlated with the student's performance 👩‍🔬 👨‍🔬'''
-COVERAGE_YES = '''Well done to you for looknig at the notes last week! 😎'''
+COVERAGE_YES = '''Well done to you for looking at the notes last week! 😎'''
 
 MATERIAL_LAB = '''In order to engage more with the material and make more progress on the laboratory work, ''' + \
 '''please have a closer look at the labsheet: %s'''
@@ -67,7 +67,7 @@ OPT_OUT = '''I am sad to see you go 🙁 I hope you were motivated to continue t
 '''Are you sure you want to opt-out? You will not be able to talk to me again this semester. Type *yes* to confirm'''
 
 CONFIRM_OPT_OUT = '''Thank you for your confirmation! You just opted-out. Do you want to remove all your data from our system? ''' + \
-'''Remember your phone number will removed at the end of the semester anyway. Your data is only used for research purposed anonymously. ''' + \
+'''Remember your phone number will removed at the end of the semester anyway. Your data is only used for research purposes anonymously. ''' + \
 '''Type *yes* to confirm or another word not to'''
 
 NOT_CONFIRM_OPT_OUT = '''I am so happy you are staying 👊 Type *menu* to see the options! 😎'''
@@ -140,7 +140,7 @@ def get_options(db, student, text):
     if text == 'menu':
         return [ OPTIONS ], 5
     elif text == 'more':
-        return [ MORE_OPTIONS ]
+        return [ MORE_OPTIONS ], 5
     elif text == 'progress':
         # Performance prediction
         prediction = get_prediction(db, student['username'])
@@ -187,7 +187,7 @@ def opt_out(db, _student, _text):
 
 def delete_personal_data(db, _student, _text):
 
-    text = get_text(text)
+    text = get_text(_text)
     if text == 'yes':
         return [ DATA_REMOVED ], 9
     else:

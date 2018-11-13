@@ -103,11 +103,11 @@ if prod:
                                 message_text = message.safe_content[:-3].strip()
                                 print('Received: {}'.format(message_text))
                                 # Store message from user
-                                store_message(db, username, 'coderbot', message_text)
+                                store_message(username, 'coderbot', message_text)
                                 # Text
                                 await text(db, student, message_text)
                     else:
-                        print('Number not known')
+                        print('Number %s NOT known' % (phone))
 
             # Wait for a bit
             print('wait!')

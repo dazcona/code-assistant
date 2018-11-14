@@ -38,7 +38,7 @@ def join(token):
 	form = PhoneForm(request.form)
 	if request.method == 'POST' and form.validate_on_submit():
 		student = db.students.find_one(
-			{ 'token': token, 'status': { '$in': [ 1, 2 ] } },
+			{ 'token': token, 'status': { '$in': [ 1, 2, 3, 4 ] } },
 			{ '_id': 1 },
 		)
 		if student:

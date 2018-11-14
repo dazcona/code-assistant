@@ -48,7 +48,7 @@ services:
        - SELENIUM=http://firefox:4444/wd/hub
     volumes:
        - "../:/coderbot"
-    command: "python /coderbot/src/talk.py"
+    command: "tail -f /dev/null" #"python /coderbot/src/talk.py"
     networks:
        - selenium
     depends_on:

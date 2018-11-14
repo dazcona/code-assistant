@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+print("Talk started")
 # IMPORTS
 import os, sys, time, json
 from webwhatsapi import WhatsAPIDriver
@@ -64,7 +64,7 @@ def text(student, incoming_text=''):
             print('Storing message...')
             store_message(db, 'coderbot', username, response_text)
         # Update Status
-        print('Updaing status...')
+        print('Updating status...')
         update_status(db, username, status_updated)
     else:
         print('Invalid Response')
@@ -72,33 +72,46 @@ def text(student, incoming_text=''):
 # Check unread messages
 while True:
     time.sleep(1)
-    print('Validate signups!')
-    for student in get_signups(db):
-        time.sleep(1)
-        text(student)
+    try:
 
-    print('Check unread!')
-    for contact in driver.get_unread():
-        time.sleep(1)
-        print('Get phone')
-        phone = contact.chat.id
-        if '@g.' not in phone: # only individual chats
-            print('Get student')
-            student = get_student_by_phone(db, phone)
-            if student: # student known
-                username = student['username']
-                print('Check messages:')
-                for message in reversed(contact.messages):
-                    print('Message: {}'.format(message))
-                    if isinstance(message, Message):
-                        # Message from user
-                        message_text = message.safe_content[:-3].strip()
-                        print('Received: {}'.format(message_text))
-                        # Store message from user
-                        store_message(db, username, 'coderbot', message_text)
-                        # Text
-                        text(student, message_text)
-            else:
-                print('Number %s NOT known' % (phone))
+        print('Validate signups!')
+        for student in get_signups(db):
+            # Sleep 1 sec!
+            time.sleep(1)
+            username = student['username']
+            try:
+                text(student)
+            except:
+                print('Error signing up student %s' % (username))
+                print('Updating status...')
+                update_status(db, username, 11)
+
+        print('Check unread!')
+        for contact in driver.get_unread():
+            # Sleep 1 sec!
+            time.sleep(1)
+            # Get phone
+            print('Get phone')
+            phone = contact.chat.id
+            if '@g.' not in phone: # only individual chats
+                print('Get student')
+                student = get_student_by_phone(db, phone)
+                if student: # student known
+                    username = student['username']
+                    print('Check messages:')
+                    for message in reversed(contact.messages):
+                        print('Message: {}'.format(message))
+                        if isinstance(message, Message):
+                            # Message from user
+                            message_text = message.safe_content[:-3].strip()
+                            print('Received: {}'.format(message_text))
+                            # Store message from user
+                            store_message(db, username, 'coderbot', message_text)
+                            # Text
+                            text(student, message_text)
+                else:
+                    print('Number %s NOT known' % (phone))
+    except:
+        print("Error in the main loop")
 
 

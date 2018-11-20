@@ -13,10 +13,10 @@ mongo:
 bot:
 	docker exec -it bot bash
 create:
-	docker exec -it web python src/create.py data/emails/emails.test.csv
-	docker exec -it web python src/create.py data/predictions/predictions.test.json
-	docker exec -it web python src/create.py data/recommendations/recommendations.test.json
-	docker exec -it web python src/create.py data/features/features.test.json
+	# docker exec -it web python src/create.py data/emails/emails.test.csv
+	docker exec -it web python src/create.py data/features/features_CA116_2019.json
+	docker exec -it web python src/create.py data/predictions/predictions_CA116_2019_week_8.json
+	docker exec -it web python src/create.py data/recommendations/recommendations_CA116_2019_week_8.json
 send:
 	docker exec -it web python src/send.py
 down:

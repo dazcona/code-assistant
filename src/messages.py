@@ -51,7 +51,8 @@ MATERIAL_RES = '''Check out the following related material: %s 👩‍💻 👨�
 PROGRAM = '''Check out this code snippet regarding ```%s``` 🚀'''
 
 REMINDER = '''This information was generated on %s and your progression might have changed since.'''
-_DATE = '''Monday the 12th November 2018'''
+# _DATE = '''Monday the 12th November 2018'''
+_DATE = '''Monday the 20th November 2018'''
 
 TERMS = '''Our predictions and recommended programs are based on your engagement and effort with the course ''' + \
 '''(the programs you develop and the course material you access); your characteristics and prior performance. ''' + \
@@ -149,10 +150,10 @@ def get_options(db, student, text):
         # Work
         work = get_work(db, student['username'])
         # Message
-        grade = get_grade_message(prediction['prediction'], work['cum_programs_W7'])
+        grade = get_grade_message(prediction['prediction'], work['cum_programs_W8'])
         response = [ grade, REMINDER % _DATE, LAB ]
         # Coverage
-        if work['coverage_W7']:
+        if work['coverage_W8']:
             response.append( COVERAGE_YES )
         return response, 5
     elif text == 'material':

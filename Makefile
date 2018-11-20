@@ -10,6 +10,8 @@ web:
 	docker exec -it web bash
 mongo:
 	docker exec -it mongo mongo admin -u root -p
+bot:
+	docker exec -it bot bash
 create:
 	docker exec -it web python src/create.py data/emails/emails.test.csv
 	docker exec -it web python src/create.py data/predictions/predictions.test.json

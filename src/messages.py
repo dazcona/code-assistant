@@ -75,7 +75,7 @@ CONFIRM_OPT_OUT = '''Thank you for your confirmation! You just opted-out. Do you
 '''Type *yes* to confirm or another word not to'''
 NOT_CONFIRM_OPT_OUT = '''I am so happy you are staying 👊 Type *menu* to see the options! 😎'''
 
-DATA_REMOVED = '''Thank you for your confirmation! Your data will be remove. '''
+DATA_REMOVED = '''Thank you for your confirmation! Your data will be removed. '''
 DATA_NOT_REMOVED = '''Thank you for your confirmation! Your data will only be used for research purposed anonymously. '''
 BYE = '''Any question please reach out to us at predictcs@computing.dcu.ie. Bye now 🤖 👋 '''
 

@@ -1,6 +1,17 @@
 version: "3"
 
 services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ../nginx/certs:/etc/nginx/certs
+    networks:
+      - selenium  
+
   firefox:
     image: selenium/standalone-firefox-debug:3.13.0
     container_name: firefox
@@ -27,8 +38,10 @@ services:
       dockerfile: Dockerfile.web
     container_name: web
     working_dir: /web
-    ports:
-      - "80:5000"
+    expose:
+      - 80
+    environment:
+      - VIRTUAL_HOST=test.computing.dcu.ie
     volumes:
        - "../:/web"
     command: "python /web/src/app.py"

@@ -41,7 +41,7 @@ services:
     expose:
       - 80
     environment:
-      - VIRTUAL_HOST=test.computing.dcu.ie
+      - VIRTUAL_HOST=predictcs.computing.dcu.ie
     volumes:
        - "../:/web"
     command: "python /web/src/app.py"

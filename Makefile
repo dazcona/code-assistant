@@ -15,8 +15,8 @@ bot:
 create:
 	# docker exec -it web python src/create.py data/emails/emails.test.csv
 	docker exec -it web python src/create.py data/features/features_CA116_2019.json
-	docker exec -it web python src/create.py data/predictions/predictions_CA116_2019_week_9.json
-	docker exec -it web python src/create.py data/recommendations/recommendations_CA116_2019_week_9.json
+	docker exec -it web python src/create.py data/predictions/predictions_CA116_2019_week_11.json
+	docker exec -it web python src/create.py data/recommendations/recommendations_CA116_2019_week_11.json
 send:
 	docker exec -it web python src/send.py
 down:

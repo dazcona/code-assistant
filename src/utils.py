@@ -107,7 +107,7 @@ def get_prediction(db, username):
     """ Get prediction """
 
     return db.predictions.find_one(
-        { 'student': username, 'week': 9 }, 
+        { 'student': username, 'week': 11 }, 
         { 'prediction': 1 },
     )
 
@@ -116,7 +116,7 @@ def get_recommendation(db, username):
     """ Get prediction """
 
     return db.recommendations.find_one(
-        { 'student': username, 'week': 9 }, 
+        { 'student': username, 'week': 11 }, 
         { 'task': 1, 'labsheet': 1, 'resources': 1 },
     )
 
@@ -125,6 +125,6 @@ def get_work(db, username):
     """ Get prediction """
 
     return db.features.find_one(
-        { 'student': username, 'week': 9 }, 
-        { 'cum_programs_W9': 1, 'coverage_W9': 1 },
+        { 'student': username, 'week': 11 }, 
+        { 'cum_programs_W11': 1, 'coverage_W11': 1 },
     )

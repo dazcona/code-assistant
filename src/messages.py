@@ -47,13 +47,16 @@ COVERAGE_YES = '''Well done to you for looking at the notes last week! 😎'''
 MATERIAL_LAB = '''In order to engage more with the material and make more progress on the laboratory work, ''' + \
 '''please have a closer look at the labsheet: %s'''
 MATERIAL_RES = '''Check out the following related material: %s 👩‍💻 👨‍💻'''
+NO_MATERIAL = '''Well done to you for not having a failed submission on the system! Way to go! Check *program* for a random code snippet.'''
 
 PROGRAM = '''Check out this code snippet regarding ```%s``` 🚀'''
 
 REMINDER = '''This information was generated on %s and your progression might have changed since.'''
 # _DATE = '''Monday the 12th November 2018'''
 # _DATE = '''Monday the 20th November 2018'''
-_DATE = '''Monday the 26th November 2018'''
+#_DATE = '''Monday the 26th November 2018'''
+#_DATE = '''Monday the 3rd December 2018'''
+_DATE = '''Monday the 10th December 2018'''
 
 TERMS = '''Our predictions and recommended programs are based on your engagement and effort with the course ''' + \
 '''(the programs you develop and the course material you access); your characteristics and prior performance. ''' + \
@@ -151,20 +154,23 @@ def get_options(db, student, text):
         # Work
         work = get_work(db, student['username'])
         # Message
-        grade = get_grade_message(prediction['prediction'], work['cum_programs_W9'])
+        grade = get_grade_message(prediction['prediction'], work['cum_programs_W11'])
         response = [ grade, REMINDER % _DATE, LAB ]
         # Coverage
-        if work['coverage_W9']:
+        if work['coverage_W11']:
             response.append( COVERAGE_YES )
         return response, 5
     elif text == 'material':
         # Recommendation
         recommendation = get_recommendation(db, student['username'])
         # Message
-        lab = LABSHEET_URI % (recommendation['labsheet']) 
-        labsheet = MATERIAL_LAB % lab
-        resources = MATERIAL_RES % ', '.join(LABSHEET_URI % (resource) for resource in recommendation['resources'])
-        return [ labsheet, resources ], 5
+        if 'labsheet' in recommendation:
+            lab = LABSHEET_URI % (recommendation['labsheet']) 
+            labsheet = MATERIAL_LAB % lab
+            resources = MATERIAL_RES % ', '.join(LABSHEET_URI % (resource) for resource in recommendation['resources'])
+            return [ labsheet, resources ], 5
+        else:
+            return [ NO_MATERIAL ], 5
     elif text == 'program':
         # Random gist
         snippet, desc =  gist()

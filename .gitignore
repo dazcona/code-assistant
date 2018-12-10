@@ -17,3 +17,6 @@ data/
 # MAC
 .DS_Store
 src/.DS_Store
+
+# Proxy
+nginx/

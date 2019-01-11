@@ -2,6 +2,8 @@
 
 Code Assistant is a Whatsapp Artificial Intelligence ChatBot to support learning of computer programming for college students 🤖 👾 
 
+![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2Fdazcona%2Fcode-assistant)
+
 ## Desc
 
 Conventionally, learning analytics are used to notify students regarding their predicted performance and further resources using email or via a university's Learning Management System. To support students to engage in learning and become more pro-active about their learning, we designed CoderBot. CoderBot, is an Artificial Intelligent Chatbot service deployed on WhatsApp1 as a coding assistant to support learning of computer programming. CoderBot has been deployed in our University’s Python Programming I course.

@@ -9,6 +9,10 @@ import random
 GREETING = '''Hi guest! I am CoderBot 🤖 Thanks for taking a step towards becoming a better coder 🙃. ''' + \
 '''We are ready to start our journey! 🚀'''
 
+CODE = '''This project's code has been made publicly available on Github: https://github.com/dazcona/code-assistant'''
+
+VIDEO = '''We also made a demostration video: https://www.youtube.com/watch?v=9HSLwvVzN8E'''
+
 MENU = '''At any time, type *menu* to see these options! 😎'''
 
 OPTIONS = \
@@ -105,8 +109,8 @@ def get_response(text):
     # Question
     text = get_text(text)
 
-    if text == 'hi':
-        return [ GREETING, MENU ]
+    if text in ['hi', 'hello', 'hey', 'howdy']:
+        return [ GREETING, CODE, VIDEO, MENU ]
 
     elif text == 'menu':
         return [ OPTIONS ]

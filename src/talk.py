@@ -1,117 +1,52 @@
-#!/usr/bin/python
-print("Talk started")
-# IMPORTS
-import os, sys, time, json
+#!/usr/bin/python3
+
+import os, time
 from webwhatsapi import WhatsAPIDriver
 from webwhatsapi.objects.message import Message
-from messages import status_to_message
-from utils import get_db, update_status, store_message, get_student_by_phone, get_signups
+from demo import get_response
 
+def run():
 
-# Sleep
-print("Sleeping 10 seconds...")
-time.sleep(10)
-
-print("Environment", os.environ)
-try:
-    os.environ["SELENIUM"]
-except KeyError:
-    print("Please set the environment variable SELENIUM to Selenium URL")
-
-# MongoDB
-db = get_db()
-
-# Get Profile
-profiledir = os.path.join(".", "firefox_cache")
-# driver = WhatsAPIDriverAsync(loadstyles=True, loop=loop)
-driver = WhatsAPIDriver(
-    profile=profiledir, 
-    client='remote', 
-    command_executor=os.environ["SELENIUM"],
-    loadstyles=False)
-
-driver.connect()
-print('Wait for login...')
-driver.wait_for_login()
-
-
-def text(student, incoming_text=''):
-    """ Text a student """
-
-    # Data
-    print('Student: {}'.format(student))
-    print('Gathering data...')
-    username = student['username']
-    status = student['status']
-    phone = student['phone']
-    # Get Response
-    print('Getting response...')
-    response = status_to_message[status](db, student, incoming_text)
-    if response:
-        # Valid Response
-        response_texts, status_updated = response
-        # Reply
-        print('Replying...')
-        for response_text in response_texts:
-            # Reply message
-            if incoming_text == '':
-                phone_number = phone.split('@')[0]
-                chat = driver.get_chat_from_phone_number(phone, createIfNotFound=True)
-            else:
-                chat = driver.get_chat_from_id(phone)
-            chat.send_message(response_text)
-            # Store message
-            print('Storing message...')
-            store_message(db, 'coderbot', username, response_text)
-        # Update Status
-        print('Updating status...')
-        update_status(db, username, status_updated)
-    else:
-        print('Invalid Response')
-
-# Check unread messages
-while True:
-    time.sleep(1)
     try:
+        os.environ["SELENIUM"]
+        print('Connecting...')
+        profiledir = os.path.join("/coderbot","config", "firefox_cache")
+        driver = WhatsAPIDriver(
+            profile=profiledir, 
+            client='remote', 
+            command_executor=os.environ["SELENIUM"],
+            loadstyles=False)
+        driver.connect()
+        print('Wait for login...')
+        driver.wait_for_login()
+        driver.subscribe_new_messages(NewMessageObserver(driver))
+        print("Waiting for new messages...")
 
-        print('Validate signups!')
-        for student in get_signups(db):
-            # Sleep 1 sec!
-            time.sleep(1)
-            username = student['username']
-            try:
-                text(student)
-            except:
-                print('Error signing up student %s' % (username))
-                print('Updating status...')
-                update_status(db, username, 11)
+        while True:
+            time.sleep(60)
 
-        print('Check unread!')
-        for contact in driver.get_unread():
-            # Sleep 1 sec!
-            time.sleep(1)
-            # Get phone
-            print('Get phone')
-            phone = contact.chat.id
-            if '@g.' not in phone: # only individual chats
-                print('Get student')
-                student = get_student_by_phone(db, phone)
-                if student: # student known
-                    username = student['username']
-                    print('Check messages:')
-                    for message in reversed(contact.messages):
-                        print('Message: {}'.format(message))
-                        if isinstance(message, Message):
-                            # Message from user
-                            message_text = message.safe_content[:-3].strip()
-                            print('Received: {}'.format(message_text))
-                            # Store message from user
-                            store_message(db, username, 'coderbot', message_text)
-                            # Text
-                            text(student, message_text)
-                else:
-                    print('Number %s NOT known' % (phone))
-    except:
-        print("Error in the main loop")
+    except Exception as e:
+        print('Error connecting to Whatsapp, stopping...')
+        print(e)
+        raise
 
+class NewMessageObserver:
+    def __init__(self, driver):
+        self.driver = driver
+    def on_message_received(self, new_messages):
+        try:
+            print('Processing {} messages...'.format(len(new_messages)))
+            send_msg_sleep = 0.5
+            for message in reversed(new_messages):
+                id = message.sender.id
+                if len(message.chat_id['user'])>19:
+                    break
+                response = get_response(message.safe_content[:-3].lower())
+                self.driver.send_message_to_id(id, response)
+                time.sleep(send_msg_sleep)
+        except Exception as e:
+            print('Error in the main loop, starting agin...')
+            print(e)
 
+if __name__ == '__main__':
+    run()

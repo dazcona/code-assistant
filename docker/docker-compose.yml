@@ -1,16 +1,6 @@
 version: "3"
 
 services:
-  # nginx-proxy:
-  #   image: jwilder/nginx-proxy
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   volumes:
-  #     - /var/run/docker.sock:/tmp/docker.sock:ro
-  #     - ../nginx/certs:/etc/nginx/certs
-  #   networks:
-  #     - selenium  
 
   firefox:
     image: selenium/standalone-firefox-debug:3.13.0
@@ -22,37 +12,7 @@ services:
       - "/dev/shm:/dev/shm"
     networks:
       - selenium
-  mongo:
-    image: mongo
-    container_name: mongo
-    volumes:
-      - ../data/db:/data/db
-    command: mongod
-    networks:
-       - selenium
-    env_file:
-      - ../config/.env
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile.web
-    container_name: web
-    working_dir: /web
-    # expose:
-    #   - 80
-    ports:
-      - 80:80
-    environment:
-      - VIRTUAL_HOST=predictcs.computing.dcu.ie
-    volumes:
-       - "../:/web"
-    command: "python /web/src/app.py"
-    networks:
-       - selenium
-    depends_on:
-       - mongo
-    env_file:
-      - ../config/.env
+
   bot:
     build:
       context: .
@@ -63,13 +23,11 @@ services:
        - SELENIUM=http://firefox:4444/wd/hub
     volumes:
        - "../:/coderbot"
-    command: "tail -f /dev/null" #"python /coderbot/src/talk.py"
+    command: "python src/talk.py"
     networks:
        - selenium
     depends_on:
        - firefox
-       - mongo
-       - web
     env_file:
       - ../config/.env
 

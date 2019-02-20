@@ -8,7 +8,7 @@ from demo import get_response
 def run():
 
     try:
-        os.environ["SELENIUM"]
+        print('Selenium environment variable: {}'.format(os.environ["SELENIUM"]))
         print('Connecting...')
         profiledir = os.path.join("/coderbot","config", "firefox_cache")
         driver = WhatsAPIDriver(
@@ -31,21 +31,33 @@ def run():
         raise
 
 class NewMessageObserver:
+
     def __init__(self, driver):
         self.driver = driver
+
     def on_message_received(self, new_messages):
+        
         try:
+            
             print('Processing {} messages...'.format(len(new_messages)))
             send_msg_sleep = 0.5
+            
             for message in reversed(new_messages):
-                id = message.sender.id
-                if len(message.chat_id['user'])>19:
+                # Sender
+                _id = message.sender.id
+                if len(message.chat_id['user']) > 19:
                     break
-                response = get_response(message.safe_content[:-3].lower())
-                self.driver.send_message_to_id(id, response)
+                # Message
+                text = message.safe_content[:-3].lower()
+                # Responses
+                responses = get_response(text)
+                for response in responses:
+                    self.driver.send_message_to_id(_id, response)
+                # Sleep
                 time.sleep(send_msg_sleep)
+        
         except Exception as e:
-            print('Error in the main loop, starting agin...')
+            print('Error in the main loop, starting again...')
             print(e)
 
 if __name__ == '__main__':

@@ -8,6 +8,9 @@ from demo import get_response
 def run():
 
     try:
+        # Sleep before starting the bot
+        time.sleep(20)
+        
         print('Selenium environment variable: {}'.format(os.environ["SELENIUM"]))
         print('Connecting...')
         profiledir = os.path.join("/coderbot","config", "firefox_cache")
@@ -52,7 +55,10 @@ class NewMessageObserver:
                 # Responses
                 responses = get_response(text)
                 for response in responses:
-                    self.driver.send_message_to_id(_id, response)
+                    if response.startswith('/coderbot/'):
+                        self.driver.send_media(response, _id, caption='')
+                    else:
+                        self.driver.send_message_to_id(_id, response)
                 # Sleep
                 time.sleep(send_msg_sleep)
         

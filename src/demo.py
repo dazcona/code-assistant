@@ -125,7 +125,9 @@ def get_response(text):
         work = random.random()
         # Message
         grade = get_grade_message(prediction, work)
-        return [ grade, REMINDER, LAB, COVERAGE_YES ]
+        # Image
+        image_path = '/coderbot/img/{}/{}.png'.format('positive' if prediction else 'negative', random.randint(0, 11))
+        return [ grade, REMINDER, LAB, COVERAGE_YES, image_path ]
 
     elif text == 'material':
         # Recommendation
@@ -153,8 +155,7 @@ def get_response(text):
     elif text == 'opt-out':
         return [ OPT_OUT ]
 
-    else:
-        return [ NOT_FOUND ]
+    return [ NOT_FOUND ]
 
 
 if __name__ == "__main__":

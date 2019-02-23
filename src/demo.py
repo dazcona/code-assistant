@@ -131,7 +131,7 @@ def get_response(text):
 
     elif text == 'material':
         # Recommendation
-        recommendation = random.random() < 0.1
+        recommendation = random.random() > 0.1
         # Message
         if recommendation:
             resource_desc, resource_uri = RESOURCES[random.randint(0, len(RESOURCES))]

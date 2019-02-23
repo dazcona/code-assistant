@@ -109,7 +109,7 @@ def get_response(text):
     # Question
     text = get_text(text)
 
-    if text in ['hi', 'hello', 'hey', 'howdy']:
+    if text.split()[0] in ['hi', 'hello', 'hey', 'howdy']:
         return [ GREETING, CODE, VIDEO, MENU ]
 
     elif text == 'menu':
